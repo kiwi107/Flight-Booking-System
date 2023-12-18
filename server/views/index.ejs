@@ -1,0 +1,99 @@
+<%- include('include/_header') %>
+
+<div class="container">
+
+    <h1>Book a Flight</h1>
+    <div class="row">
+        <div class="col-6">
+            <label for="fromInput" class="form-label">From</label>
+
+        </div>
+        <div class="col-6">
+            <label for="toInput" class="form-label">To</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1 text-right">
+            <div id="flagFrom">
+
+            </div>
+        </div>
+        <div class="col-4 text-left">
+            <input class="form-control" list="datalistOptionss" id="fromInput" placeholder="Type to search...">
+            <datalist id="datalistOptionss">
+                <% for(var i=0; i<airports.length; i++) { %>
+                <option value="<%= airports[i].name %>">
+                    <%= airports[i].city %>, <%= airports[i].country %>
+
+                </option>
+                <input type="hidden" name="<%= airports[i].name %>" value="<%= airports[i].country %>">
+                <% } %>
+
+
+            </datalist>
+        </div>
+        <div class="col-1 text-center">
+            <i class="fa fa-solid fa-plane"></i>
+
+        </div>
+        <div class="col-1">
+            <div id="flagTo">
+            </div>
+        </div>
+        <div class="col-4">
+            <input class="form-control" list="datalistOptions" id="toInput" placeholder="Type to search...">
+            <datalist id="datalistOptions">
+                <% for(var i=0; i<airports.length; i++) { %>
+                <option value="<%= airports[i].name %>">
+                    <%= airports[i].city %>, <%= airports[i].country %>
+
+                </option>
+                <input type="hidden" name="<%= airports[i].name %>" value="<%= airports[i].country %>">
+                <% } %>
+
+            </datalist>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+
+
+        const countries = []
+        fetch('https://restcountries.com/v3.1/all?fields=name,flags')
+            .then(response => response.json())
+            .then(data =>
+                countries.push(...data)
+            )
+            .catch(err => console.log(err))
+
+        fromInput = document.querySelector('#fromInput')
+        fromInput.addEventListener('input', (e) => {
+            const countryfromFrom = document.querySelector(`input[name="${fromInput.value}"]`).value
+            selectedCountry = countries.find(country => country.name.common === countryfromFrom)
+            flag = selectedCountry.flags.png
+            document.querySelector('#flagFrom').innerHTML = `<img src="${flag}" alt="flag" width="50px">`
+        })
+        toInput = document.querySelector('#toInput')
+        toInput.addEventListener('input', (e) => {
+            const countryfromFrom = document.querySelector(`input[name="${toInput.value}"]`).value
+            selectedCountry = countries.find(country => country.name.common === countryfromFrom)
+            flag = selectedCountry.flags.png
+            document.querySelector('#flagTo').innerHTML = `<img src="${flag}" alt="flag" width="50px">`
+        })
+
+
+
+
+
+
+
+
+    });
+
+
+</script>
+
+
+<%- include('include/_footer') %>
